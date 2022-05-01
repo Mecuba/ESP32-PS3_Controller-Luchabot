@@ -8,22 +8,22 @@
 #define motFrenteB    2
 #define motAtrasB     3
 
-#define motFrenteAP   16
-#define motAtrasAP    17     //PINES
-#define motFrenteBP   18
-#define motAtrasBP    19
+#define motFrenteAP   25
+#define motAtrasAP    26     //PINES
+#define motFrenteBP   12
+#define motAtrasBP    13
 
 #define pinRampa        11
-#define pinTorreta      12
+#define pinTorreta      5
 #define rampaArriba     0
 #define rampaAbajo      180
 #define torretaSpeed    0
 #define torretaReversa  200
 
-#define in1       23   //14 
-#define in2       22   //12 
-#define in3       19   //13 
-#define in4       18  //15 
+#define in1       25   //14 
+#define in2       26   //12 
+#define in3       12   //13 
+#define in4       13  //15 
 #define derP      17   //17 
 #define izqp      16   //16 
 
@@ -138,7 +138,7 @@ void setup()
 
     Ps3.attach(notify);
     Ps3.attachOnConnect(onConnect);
-    Ps3.begin("01:02:03:04:05:06");
+    Ps3.begin("0c:ee:e6:27:91:49");
 
     Serial.print("Ready, Waiting for connection");
 }
@@ -413,17 +413,7 @@ void modoAutonomo()
 }
 
 void control() {
-  // Read the DPAD (Up/Down/Left/Right) or read a button (ABXY, Minus, Plus)
   int vel;
-//  boolean padUp = classic.dpadUp();
-//  boolean padDown = classic.dpadDown();
-//  boolean padRight = classic.dpadRight();
-//  boolean padLeft = classic.dpadLeft();
-//  
-//  boolean aButton = classic.buttonA();
-//  boolean bButton = classic.buttonB();
-//  boolean plusButton = classic.buttonPlus();
-//  boolean minusButton = classic.buttonMinus();
   
   if(!currentState.rShoulderTrigBtn) //No hay movimiento
   {
