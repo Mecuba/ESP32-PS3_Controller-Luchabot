@@ -88,34 +88,6 @@ void moveControl(int x, int y)
         digitalWrite(in4, HIGH);
     }
 
-
-
-
-
-////Move Backward Right
-//    else if(y >= 10 && x >= 10)
-//    {
-//        Serial.println("Moving Backward Right");
-//        ledcWrite(ledChannel, analogWriteX);
-//        ledcWrite(ledChannel2, analogWriteY);
-//        digitalWrite(in1, HIGH);
-//        digitalWrite(in2, LOW);
-//        digitalWrite(in3, HIGH);
-//        digitalWrite(in4, LOW);
-//    }
-
-////Move Backward Left
-//    else if(y >= 10 && x <= -10)
-//    {
-//        Serial.println("Moving Backward Left");
-//        ledcWrite(ledChannel, analogWriteY);
-//        ledcWrite(ledChannel2, analogWriteX);
-//        digitalWrite(in1, HIGH);
-//        digitalWrite(in2, LOW);
-//        digitalWrite(in3, HIGH);
-//        digitalWrite(in4, LOW);
-//    }
-
 }
 
 
@@ -192,14 +164,14 @@ void notify()
 
     //------------- Digital shoulder button events -------------
     if( Ps3.event.analog_changed.button.l1 > 200 ) 
-    {torreta.attach(pinTorreta); torreta.write(torretaReversa); Serial.print("Reload torreta"); delay(100); currentState.lShoulderBtn = true; }
+    {torreta.attach(pinTorreta); torreta.write(torretaReversa); Serial.print("Reload torreta"); currentState.lShoulderBtn = true; }
     if( Ps3.event.analog_changed.button.l1 < 100 ) 
-    { torreta.detach(); delay(10); currentState.lShoulderBtn = false;} 
+    { torreta.detach(); currentState.lShoulderBtn = false;} 
 
     if( Ps3.event.analog_changed.button.r1 > 200 ) 
-    {torreta.attach(pinTorreta); torreta.write(torretaSpeed); Serial.print("piu piu!"); delay(100); currentState.rShoulderBtn = true;}
+    {torreta.attach(pinTorreta); torreta.write(torretaSpeed); Serial.print("piu piu!"); currentState.rShoulderBtn = true;}
     if( Ps3.event.analog_changed.button.r1 < 100 ) 
-    { torreta.detach(); delay(10); currentState.rShoulderBtn = false; }
+    { torreta.detach(); currentState.rShoulderBtn = false; }
 
     //-------------- Digital trigger button events -------------
     if( Ps3.event.analog_changed.button.l2 > 200 ) currentState.lShoulderTrigBtn = true;
@@ -317,5 +289,4 @@ void loop()
         delay(1000);
     }
 
-    //delay(2000);
 }

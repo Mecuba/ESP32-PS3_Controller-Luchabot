@@ -20,13 +20,6 @@
 #define torretaSpeed    0
 #define torretaReversa  200
 
-#define in1       25   //14 
-#define in2       26   //12 
-#define in3       12   //13 
-#define in4       13  //15 
-#define derP      17   //17 
-#define izqp      16   //16 
-
 //////////////////////////////
 ///////// ESTRUCTURAS /////////
 
@@ -110,6 +103,7 @@ const int derChannel = 0;
 const int izqChannel = 1;
 const int resolution = 8;
 struct buttonsState currentState;
+
 //////////////////////////////////
 ////////// PROGRAMA /////////////////
 void setup()
@@ -148,111 +142,12 @@ void loop()
     if(!Ps3.isConnected()) {
         Serial.print(".");
         delay(1000);
-    }else{
-      if(currentState.selectBtn)
-      {
-        toggleMode();
-      }
-    
-      if(autoStatus == true) modoAutonomo() ;
-      else control();
     }
     
 }
 
 //////////////////////////////////////////////////
 //////// DEFINICIÓN DE FUNCIONES /////////////////
-void moveControl(int x, int y)
-{
-  int analogWriteX = map(abs(x), 0, 127, 10, speedSet);
-  int analogWriteY = map(abs(y), 0, 127, 10, speedSet);
-//Move Forward
-//    if(y <= -10)
-//    {
-//        Serial.println("Moving Forward");
-//        ledcWrite(ledChannel, analogWriteY);
-//        ledcWrite(ledChannel2, analogWriteY);
-//        digitalWrite(in1, LOW);
-//        digitalWrite(in2, HIGH);
-//        digitalWrite(in3, LOW);
-//        digitalWrite(in4, HIGH);
-//    }
-//
-//
-////Move Forward Right
-//    if(x >= 10 && y <= -10)
-//    {
-//        Serial.println("Moving Forward Right");
-//        ledcWrite(ledChannel, analogWriteX);
-//        ledcWrite(ledChannel2, analogWriteY);
-//        digitalWrite(in1, LOW);
-//        digitalWrite(in2, HIGH);
-//        digitalWrite(in3, LOW);
-//        digitalWrite(in4, HIGH);
-//    }
-//
-////Move Forward Left
-//    if(x <= -10 && y <= -10)
-//    {
-//        Serial.println("Moving Forward Left");
-//        ledcWrite(ledChannel, analogWriteY);
-//        ledcWrite(ledChannel2, analogWriteX);
-//        digitalWrite(in1, LOW);
-//        digitalWrite(in2, HIGH);
-//        digitalWrite(in3, LOW);
-//        digitalWrite(in4, HIGH);
-//    }
-//
-////No Move
-//    if(y == 0 && x ==0)
-//    {
-//        Serial.println("STOP");
-//        ledcWrite(ledChannel, analogWriteY);
-//        ledcWrite(ledChannel2, analogWriteY);
-//        digitalWrite(in1, LOW);
-//        digitalWrite(in2, LOW);
-//        digitalWrite(in3, LOW);
-//        digitalWrite(in4, LOW);
-//    }
-//
-////Move Backward
-//    if(y >= 10 && x <= 10)
-//    {
-//        Serial.println("Moving Backward");
-//        ledcWrite(ledChannel, analogWriteY);
-//        ledcWrite(ledChannel2, analogWriteY);
-//        digitalWrite(in1, HIGH);
-//        digitalWrite(in2, LOW);
-//        digitalWrite(in3, HIGH);
-//        digitalWrite(in4, LOW);
-//    }
-//
-////Move Backward Right
-//    else if(y >= 10 && x >= 10)
-//    {
-//        Serial.println("Moving Backward Right");
-//        ledcWrite(ledChannel, analogWriteX);
-//        ledcWrite(ledChannel2, analogWriteY);
-//        digitalWrite(in1, HIGH);
-//        digitalWrite(in2, LOW);
-//        digitalWrite(in3, HIGH);
-//        digitalWrite(in4, LOW);
-//    }
-//
-////Move Backward Left
-//    if(y >= 10 && x <= -10)
-//    {
-//        Serial.println("Moving Backward Left");
-//        ledcWrite(ledChannel, analogWriteY);
-//        ledcWrite(ledChannel2, analogWriteX);
-//        digitalWrite(in1, HIGH);
-//        digitalWrite(in2, LOW);
-//        digitalWrite(in3, HIGH);
-//        digitalWrite(in4, LOW);
-//    }
-}
-
-
 void notify()
 {
     //--- Digital cross/square/triangle/circle button events ---
@@ -348,20 +243,21 @@ void notify()
     }
     
 
-    // printing the state of all the button
-    if(currentState.rShoulderBtn) {
-      speedSet += 10;
-      Serial.print("Speed is : ");
-      Serial.println(speedSet);
-      if (speedSet >= 255) speedSet = 255;
-    }
-    if(currentState.rShoulderTrigBtn) {
-      speedSet -= 10;
-      Serial.print("Speed is : ");
-      Serial.println(speedSet);
-      if (speedSet <= 100) speedSet = 100;
-    }
-    moveControl(currentState.rightXAxis, currentState.rightYAxis); // x, y
+//    // printing the state of all the button
+//    if(currentState.rShoulderBtn) {
+//      speedSet += 10;
+//      Serial.print("Speed is : ");
+//      Serial.println(speedSet);
+//      if (speedSet >= 255) speedSet = 255;
+//    }
+//    if(currentState.rShoulderTrigBtn) {
+//      speedSet -= 10;
+//      Serial.print("Speed is : ");
+//      Serial.println(speedSet);
+//      if (speedSet <= 100) speedSet = 100;
+//    }
+    
+    control(); 
 }
 
 void onConnect(){
@@ -370,47 +266,6 @@ void onConnect(){
 }
 
 //////////// movimiento //////////
-
-void toggleMode()
-{
-  if(autoStatus == false)
-  {
-    Serial.println("Entrando a Modo Autonomo");
-    autoStatus = true;
-    delay(500);
-  }
-  else
-  {
-    Serial.println("Entrando a Modo Manual");
-    autoStatus = false;
-    delay(500);
-  }
-}
-
-void modoAutonomo() 
-{
-  bool stay = true;
-  while(stay)
-  {
-    //boolean success = classic.update();
-    Serial.println("Beep, boop");
-    digitalWrite(motFrenteA, LOW);  //Atrás
-    digitalWrite(motAtrasA, HIGH);  
-
-    digitalWrite(motFrenteB, LOW);  //Atrás
-    digitalWrite(motAtrasB, HIGH);  
-    //delay(1000);
-    
-    
-    if(currentState.selectBtn) //Salir del modo Automatico
-    {
-      stay = false;
-      motorOFF();
-      toggleMode();
-    }
-  }
-  
-}
 
 void control() {
   int vel;
@@ -446,10 +301,10 @@ void control() {
   //else { rampa.write(rampaAbajo); delay(10);}
   
   if(currentState.lShoulderTrigBtn) //Disparar ligas
-  { torreta.attach(pinTorreta); torreta.write(torretaSpeed); Serial.print("piu piu!"); delay(10);}
+  { torreta.attach(pinTorreta); torreta.write(torretaSpeed); Serial.print("piu piu!");}
   else { torreta.detach(); delay(10); }
   if(currentState.lShoulderBtn) //Recargar ligas
-  { torreta.attach(pinTorreta); torreta.write(torretaReversa); Serial.print("Reload torreta"); delay(10);}
+  { torreta.attach(pinTorreta); torreta.write(torretaReversa); Serial.print("Reload torreta");}
   else { torreta.detach(); delay(10); }
   
   
@@ -506,80 +361,80 @@ void control() {
 
 void motorOFF()
 {
-  digitalWrite(motFrenteA, LOW);  
-  digitalWrite(motAtrasA, LOW);  
-  digitalWrite(motFrenteB, LOW);  
-  digitalWrite(motAtrasB, LOW); 
+  ledcWrite(motFrenteA, 0);
+  ledcWrite(motFrenteB, 0);
+  ledcWrite(motAtrasA, 0);
+  ledcWrite(motAtrasB, 0);
 }
 
 void adelante(int velocidad)
 {
-  analogWrite(motFrenteA, velocidad);  
-  analogWrite(motAtrasA, LOW);  
-  analogWrite(motFrenteB, velocidad);  
-  analogWrite(motAtrasB, LOW); 
+  ledcWrite(motFrenteA, velocidad);  
+  ledcWrite(motAtrasA, LOW);  
+  ledcWrite(motFrenteB, velocidad);  
+  ledcWrite(motAtrasB, LOW); 
 }
 
 void atras(int velocidad)
 {
-  analogWrite(motFrenteA, LOW);  
-  analogWrite(motAtrasA, velocidad);  
-  analogWrite(motFrenteB, LOW);  
-  analogWrite(motAtrasB, velocidad); 
+  ledcWrite(motFrenteA, LOW);  
+  ledcWrite(motAtrasA, velocidad);  
+  ledcWrite(motFrenteB, LOW);  
+  ledcWrite(motAtrasB, velocidad); 
 }
 
 void izquierda(int velocidad)
 {
-  analogWrite(motFrenteA, velocidad);  
-  analogWrite(motAtrasA, LOW);  
-  analogWrite(motFrenteB, LOW);  
-  analogWrite(motAtrasB, velocidad); 
+  ledcWrite(motFrenteA, velocidad);  
+  ledcWrite(motAtrasA, LOW);  
+  ledcWrite(motFrenteB, LOW);  
+  ledcWrite(motAtrasB, velocidad); 
 }
 
 void derecha(int velocidad)
 {
-  analogWrite(motFrenteB, velocidad);  
-  analogWrite(motAtrasB, LOW);  
-  analogWrite(motFrenteA, LOW);  
-  analogWrite(motAtrasA, velocidad); 
+  ledcWrite(motFrenteB, velocidad);  
+  ledcWrite(motAtrasB, LOW);  
+  ledcWrite(motFrenteA, LOW);  
+  ledcWrite(motAtrasA, velocidad); 
 }
 
 void frenteIzq(int velocidad)
 {
   int midVelocidad = velocidad/3;
   
-  analogWrite(motFrenteA, velocidad);  
-  analogWrite(motAtrasA, LOW);  
-  analogWrite(motFrenteB, midVelocidad);  
-  analogWrite(motAtrasB, LOW); 
+  ledcWrite(motFrenteA, velocidad);  
+  ledcWrite(motAtrasA, LOW);  
+  ledcWrite(motFrenteB, midVelocidad);  
+  ledcWrite(motAtrasB, LOW); 
 }
 
 void frenteDer(int velocidad)
 {
   int midVelocidad = velocidad/3;
   
-  analogWrite(motFrenteA, midVelocidad);  
-  analogWrite(motAtrasA, LOW);  
-  analogWrite(motFrenteB, velocidad);  
-  analogWrite(motAtrasB, LOW); 
+  ledcWrite(motFrenteA, midVelocidad);  
+  ledcWrite(motAtrasA, LOW);  
+  ledcWrite(motFrenteB, velocidad);  
+  ledcWrite(motAtrasB, LOW); 
 }
 
 void atrasDer(int velocidad)
 {
   int midVelocidad = velocidad/3;
   
-  analogWrite(motFrenteA, LOW);  
-  analogWrite(motAtrasA, midVelocidad);  
-  analogWrite(motFrenteB, LOW);  
-  analogWrite(motAtrasB, velocidad); 
+  ledcWrite(motFrenteA, LOW);  
+  ledcWrite(motAtrasA, midVelocidad);  
+  ledcWrite(motFrenteB, LOW);  
+  ledcWrite(motAtrasB, velocidad); 
 }
 
 void atrasIzq(int velocidad)
 {
   int midVelocidad = velocidad/3;
   
-  analogWrite(motFrenteA, LOW);  
-  analogWrite(motAtrasA, velocidad);  
-  analogWrite(motFrenteB, LOW);  
-  analogWrite(motAtrasB, midVelocidad); 
+  ledcWrite(motFrenteA, LOW);  
+  ledcWrite(motAtrasA, velocidad);  
+  ledcWrite(motFrenteB, LOW);  
+  ledcWrite(motAtrasB, midVelocidad); 
 }
